@@ -13,6 +13,8 @@
       --muted: #b5bac1;
       --border: #3f4147;
       --accent: #5865f2;
+      --discord-dark: #1e1f22;
+      --discord-light: #f2f3f5;
     }
 
     * {
@@ -29,7 +31,7 @@
     }
 
     main {
-      width: min(520px, 100%);
+      width: min(560px, 100%);
       margin: 0 auto;
     }
 
@@ -102,10 +104,7 @@
       border-radius: 16px;
       padding: 14px 16px;
       display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 16px;
-      min-height: 86px;
+      gap: 14px;
     }
 
     .label {
@@ -125,13 +124,47 @@
       line-height: 1.35;
     }
 
-    .icon-slot {
-      width: 72px;
-      height: 72px;
+    .theme-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .theme-box {
+      min-height: 96px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
-      border-radius: 18px;
-      background: #1e1f22;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .theme-dark {
+      background: var(--discord-dark);
+    }
+
+    .theme-light {
+      background: var(--discord-light);
+      border-color: rgba(0, 0, 0, .12);
+    }
+
+    .theme-name {
+      position: absolute;
+      left: 8px;
+      bottom: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      opacity: .72;
+    }
+
+    .theme-dark .theme-name {
+      color: #f2f3f5;
+    }
+
+    .theme-light .theme-name {
+      color: #313338;
     }
 
     .icon {
@@ -147,7 +180,7 @@
     .size-56 { width: 56px; height: 56px; }
 
     .placeholder {
-      border: 1px dashed #5a5d66;
+      border: 1px dashed #7a7e89;
     }
 
     .hidden {
@@ -178,7 +211,7 @@
   <main>
     <header>
       <h1>Discord サーバーアイコン縮小プレビュー</h1>
-      <p>画像を選ぶと、40px / 48px / 56px の円形マスクで表示します。サーバーリスト確認なら 48px、念のため 40px が本命です。</p>
+      <p>画像を選ぶと、40px / 48px / 56px の円形マスクで表示します。各サイズをダーク背景・ライト背景の両方で確認できます。</p>
     </header>
 
     <section class="panel">
@@ -196,8 +229,15 @@
             <div class="size-title">40 × 40 px</div>
             <div class="size-note">小さめ表示の耐性チェック</div>
           </div>
-          <div class="icon-slot">
-            <img id="preview40" class="icon size-40 placeholder" alt="40px preview">
+          <div class="theme-row">
+            <div class="theme-box theme-dark">
+              <img id="preview40Dark" class="icon size-40 placeholder" alt="40px dark preview">
+              <div class="theme-name">Dark</div>
+            </div>
+            <div class="theme-box theme-light">
+              <img id="preview40Light" class="icon size-40 placeholder" alt="40px light preview">
+              <div class="theme-name">Light</div>
+            </div>
           </div>
         </div>
 
@@ -206,8 +246,15 @@
             <div class="size-title">48 × 48 px</div>
             <div class="size-note">標準サーバーリスト想定</div>
           </div>
-          <div class="icon-slot">
-            <img id="preview48" class="icon size-48 placeholder" alt="48px preview">
+          <div class="theme-row">
+            <div class="theme-box theme-dark">
+              <img id="preview48Dark" class="icon size-48 placeholder" alt="48px dark preview">
+              <div class="theme-name">Dark</div>
+            </div>
+            <div class="theme-box theme-light">
+              <img id="preview48Light" class="icon size-48 placeholder" alt="48px light preview">
+              <div class="theme-name">Light</div>
+            </div>
           </div>
         </div>
 
@@ -216,13 +263,20 @@
             <div class="size-title">56 × 56 px</div>
             <div class="size-note">大きめ表示の確認</div>
           </div>
-          <div class="icon-slot">
-            <img id="preview56" class="icon size-56 placeholder" alt="56px preview">
+          <div class="theme-row">
+            <div class="theme-box theme-dark">
+              <img id="preview56Dark" class="icon size-56 placeholder" alt="56px dark preview">
+              <div class="theme-name">Dark</div>
+            </div>
+            <div class="theme-box theme-light">
+              <img id="preview56Light" class="icon size-56 placeholder" alt="56px light preview">
+              <div class="theme-name">Light</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="note">外周ギリギリの文字や細線は、円形マスクと縮小でだいたい死にます。48pxで読めなければDiscord上でも読めないと思ってよし。</div>
+      <div class="note">外周ギリギリの文字や細線は、円形マスクと縮小でだいたい死にます。特に白フチ・黒フチの効き方はライト背景とダーク背景で見え方が変わるので、両方で見るのが安全です。</div>
     </section>
   </main>
 
@@ -230,9 +284,12 @@
     const fileInput = document.getElementById('fileInput');
     const fileName = document.getElementById('fileName');
     const previews = [
-      document.getElementById('preview40'),
-      document.getElementById('preview48'),
-      document.getElementById('preview56')
+      document.getElementById('preview40Dark'),
+      document.getElementById('preview40Light'),
+      document.getElementById('preview48Dark'),
+      document.getElementById('preview48Light'),
+      document.getElementById('preview56Dark'),
+      document.getElementById('preview56Light')
     ];
 
     let objectUrl = null;
